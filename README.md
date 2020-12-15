@@ -7,10 +7,6 @@ An OpenFn **_adaptor_** for building integration jobs for use with the Mailchimp
 - View the documentation at https://openfn.github.io/language-mailchimp/
 - To update the documentation site, run: `./node_modules/.bin/jsdoc --readme ./README.md ./lib -d docs`
 
-## Helper Functions
-
-### post(...)
-
 #### sample configuration
 
 ```json
