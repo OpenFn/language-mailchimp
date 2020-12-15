@@ -1,19 +1,10 @@
-# language-godata [<img src="https://avatars2.githubusercontent.com/u/9555108?s=200&v=4)" alt="alt text" height="20">](https://www.openfn.org) [![Build Status](https://travis-ci.org/OpenFn/language-godata.svg?branch=master)](https://travis-ci.org/OpenFn/language-godata)
+# language-mailchimp
 
-<img src="https://github.com/OpenFn/language-godata/raw/master/logo.png" alt="alt text" height="50">
-
-An OpenFn **_adaptor_** for building integration jobs for use with the WHO Go.Data
-API.
-
-[Go.Data](https://www.who.int/godata) is an outbreak investigation tool for
-field data collection during public health emergencies. The tool includes
-functionality for case investigation, contact follow-up, visualization of chains
-of transmission including secure data exchange and is designed for flexibility
-in the field, to adapt to the wide range of outbreak scenarios.
+An OpenFn **_adaptor_** for building integration jobs for use with the Mailchimp.
 
 ## Documentation
 
-- View the documentation at https://openfn.github.io/language-godata/
+- View the documentation at https://openfn.github.io/language-mailchimp/
 - To update the documentation site, run: `./node_modules/.bin/jsdoc --readme ./README.md ./lib -d docs`
 
 ## Helper Functions
