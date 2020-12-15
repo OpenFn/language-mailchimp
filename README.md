@@ -30,20 +30,6 @@ post({
 })
 ```
 
-### createContact(...)
-
-#### sample expression using operation
-
-_Example to consider for development_
-
-```js
-createContact({
-  "url": "api/outbreaks/{id}/contacts",
-  "body": {"outbreak": "id", "firstname": "aleksa", ...}
-  "headers": {}
-})
-```
-
 ## Development
 
 Clone the repo, run `npm install`.
