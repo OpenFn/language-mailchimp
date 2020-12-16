@@ -1,6 +1,7 @@
 # language-mailchimp
 
-An OpenFn **_adaptor_** for building integration jobs for use with the Mailchimp.
+An OpenFn **_adaptor_** for building integration jobs for use with the Mailchimp
+marketing API.
 
 ## Documentation
 
@@ -11,19 +12,39 @@ An OpenFn **_adaptor_** for building integration jobs for use with the Mailchimp
 
 ```json
 {
-  "username": "taylor@openfn.org",
-  "password": "supersecret"
+  "apiKey": "someSecretShhh",
+  "server": "us11"
 }
 ```
 
-#### sample expression using operation
+#### sample expression with multiple operations
 
 ```js
-post({
-  "url": "api/v1/forms/data/wide/json/formId",
-  "body": {"a":1}
-  "headers": {}
-})
+upsertMembers({
+  listId: 'someId',
+  users: state =>
+    state.response.body.rows.map(u => ({
+      email: u.email,
+      status: u.allow_other_emails ? 'subscribed' : 'unsubscribed',
+      mergeFields: { FNAME: u.first_name, LNAME: u.last_name },
+    })),
+  options: {},
+});
+
+tagMembers({
+  listId: 'someId', // All Subscribers
+  tagId: 'someTag', // User
+  members: state => state.response.body.rows.map(u => u.email),
+});
+
+tagMembers({
+  listId: 'someId', // All Subscribers
+  tagId: 'someTag', // Other Emails Allowed
+  members: state =>
+    state.response.body.rows
+      .filter(u => u.allow_other_emails)
+      .map(u => u.email),
+});
 ```
 
 ## Development

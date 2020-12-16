@@ -5,6 +5,8 @@ import {
   expandReferences,
 } from 'language-common';
 import axios from 'axios';
+import client from '@mailchimp/mailchimp_marketing';
+import md5 from 'md5';
 import { resolve } from 'path';
 
 /**
@@ -36,41 +38,48 @@ export function execute(...operations) {
 /**
  * Make a POST request
  * @example
- * execute(
- *   post(params)
- * )(state)
+ * upsertMembers(params)
  * @constructor
  * @param {object} params - data to make the fetch
  * @returns {Operation}
  */
-export function post(params, callback) {
+export function upsertMembers(params) {
   return state => {
-    const { baseUrl, username, password } = state.configuration;
-    const { url, body, headers } = expandReferences(params)(state);
+    const { apiKey, server } = state.configuration;
+    const { listId, users, options } = expandReferences(params)(state);
 
-    return axios({
-      method: 'post',
-      headers: {},
-      params: {},
-      baseURL,
-      url,
-      data: body,
-      auth: { username, password },
-    })
+    client.setConfig({ apiKey, server });
+
+    return Promise.all(
+      users.map(user =>
+        client.lists
+          .setListMember(listId, md5(user.email), {
+            email_address: user.email,
+            status_if_new: user.status,
+            merge_fields: user.mergeFields,
+          })
+          .then(response => {
+            state.references.push(response);
+          })
+      )
+    ).then(() => {
+      return state;
+    });
+  };
+}
+
+export function tagMembers(params) {
+  return state => {
+    const { apiKey, server } = state.configuration;
+    const { listId, tagId, members } = expandReferences(params)(state);
+
+    client.setConfig({ apiKey, server });
+
+    return client.lists
+      .batchSegmentMembers({ members_to_add: members }, listId, tagId)
       .then(response => {
-        console.log(
-          'Printing response...\n',
-          JSON.stringify(response, null, 4) + '\n',
-          'POST succeeded.'
-        );
-
         const nextState = composeNextState(state, response);
-        if (callback) resolve(callback(nextState));
-        resolve(nextState);
-      })
-      .catch(error => {
-        console.log(error);
-        reject(error);
+        return nextState;
       });
   };
 }
