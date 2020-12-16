@@ -36,11 +36,11 @@ export function execute(...operations) {
 }
 
 /**
- * Make a POST request
+ * Add members to a particular audience
  * @example
  * upsertMembers(params)
  * @constructor
- * @param {object} params - data to make the fetch
+ * @param {object} params - a listId, users, and options
  * @returns {Operation}
  */
 export function upsertMembers(params) {
@@ -68,6 +68,14 @@ export function upsertMembers(params) {
   };
 }
 
+/**
+ * Tag members with a particular tag
+ * @example
+ * tagMembers(params)
+ * @constructor
+ * @param {object} params - a tagId, members, and a list
+ * @returns {Operation}
+ */
 export function tagMembers(params) {
   return state => {
     const { apiKey, server } = state.configuration;
@@ -84,8 +92,48 @@ export function tagMembers(params) {
   };
 }
 
+/**
+ * Start a batch with a list of operations.
+ * @example
+ * startBatch(params)
+ * @constructor
+ * @param {object} params - operations batch job
+ * @returns {Operation}
+ */
+export function startBatch(params) {
+  return state => {
+    const { apiKey, server } = state.configuration;
+    const { operations } = expandReferences(params)(state);
+
+    client.setConfig({ apiKey, server });
+
+    return client.batches
+      .start({ operations: [...operations] })
+      .then(response => {
+        console.log(response);
+        const nextState = composeNextState(state, response);
+        return nextState;
+      });
+  };
+}
+
+export function listBatches(params) {
+  return state => {
+    const { apiKey, server } = state.configuration;
+
+    client.setConfig({ apiKey, server });
+
+    return client.batches.list().then(response => {
+      console.log(response);
+      const nextState = composeNextState(state, response);
+      return nextState;
+    });
+  };
+}
+
 // Note that we expose the entire axios package to the user here.
 exports.axios = axios;
+exports.md5 = md5;
 
 // What functions do you want from the common adaptor?
 export {
