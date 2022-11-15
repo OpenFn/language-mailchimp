@@ -1,4 +1,9 @@
-# language-mailchimp
+# _⚠️ MOVED TO [OpenFn/adaptors](https://github.com/OpenFn/adaptors)! ⚠️_
+
+**N.B.: New versions are available at:
+https://github.com/OpenFn/adaptors/tree/main/packages/mailchimp**
+
+# Language mailchimp (Archived)
 
 An OpenFn **_adaptor_** for building integration jobs for use with the Mailchimp
 marketing API.
